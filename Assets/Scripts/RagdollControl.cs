@@ -44,6 +44,9 @@ public class RagdollControl : MonoBehaviour
             GetComponentInParent<PlayerMovement>().enabled = false;
             trailRenderer.time = Mathf.Infinity;
 
+            //vibration
+            Handheld.Vibrate();
+
             GameManager.instance.SetGameState(GameState.GameOver);
         }
     }

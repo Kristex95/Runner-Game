@@ -2,16 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private float timeScale;
-    private GameState gameState;
+    public GameState gameState { get; private set; }
+
+    public UnityEvent OnGameStateChange;
 
     //UI
     [Header("UI")]
     [SerializeField] private GameObject endGameUI;
     [SerializeField] private GameObject preGameUI;
+
+    private CanvasGroup endGameCanvasGroup;
 
     public static GameManager instance { get; private set; }
 
@@ -25,6 +30,8 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(preGameUI);
         }
 
+        endGameCanvasGroup = endGameUI.GetComponent<CanvasGroup>();
+
         SetGameState(GameState.PreStart);
     }
 
@@ -36,6 +43,11 @@ public class GameManager : MonoBehaviour
             {
                 SetGameState(GameState.Playing);
             }
+        }
+
+        if(endGameUI.activeSelf == true && endGameCanvasGroup.alpha != 1)
+        {
+            endGameCanvasGroup.alpha += Time.deltaTime;
         }
     }
 
@@ -49,14 +61,12 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         SetGameState(GameState.PreStart);
-        Debug.Log("GameState set");
     }
 
     public void RestartLevel()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         StartCoroutine(LoadAsyncScene(currentSceneIndex));
-        //StartCoroutine((currentSceneIndex) => { })
     }
 
     public void SetGameState(GameState gameState)
@@ -78,6 +88,8 @@ public class GameManager : MonoBehaviour
         {
             ShowEndUI();
         }
+
+        OnGameStateChange?.Invoke();
     }
 
     public void ShowEndUI()
@@ -88,6 +100,7 @@ public class GameManager : MonoBehaviour
     public void HideEndUI()
     {
         endGameUI.SetActive(false);
+        endGameCanvasGroup.alpha = 0;
     }
     
     public void ShowPreGameUI()

@@ -5,14 +5,17 @@ using UnityEngine;
 public class CubeBehaviour : MonoBehaviour
 {
     private GameObject stickmanBody;
+    private GameObject player;
 
     private Animator stickmanAnim;
 
+
     public void Awake()
     {
-        stickmanBody = GameObject.Find("Stickman");
+        stickmanBody = GameObject.Find("Body");
+        player = GameObject.Find("Player");
 
-        stickmanAnim = stickmanBody.GetComponent<Animator>();
+        stickmanAnim = stickmanBody.GetComponentInChildren<Animator>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -23,13 +26,18 @@ public class CubeBehaviour : MonoBehaviour
             {
                 Destroy(collision.gameObject);
 
-                GameObject stickman = GameObject.Find("Stickman");
-                stickman.transform.position += Vector3.up;
-                GameObject stackCube = Instantiate(Resources.Load("StackCube"), stickman.transform.position + new Vector3(0, -0.5f, 0), Quaternion.identity) as GameObject;
+                stickmanBody.transform.position += Vector3.up;
+                GameObject stackCube = Instantiate(Resources.Load("StackCube"), stickmanBody.transform.position + new Vector3(0, -0.5f, 0), Quaternion.identity) as GameObject;
                 stackCube.transform.parent = this.transform.parent;
 
                 //player jumping
                 stickmanAnim.SetTrigger("Jump");
+
+                //Floating text generation
+                player.GetComponent<FloatingTextGenerator>().CreateText();
+
+                //particle effect
+                stickmanBody.GetComponentInChildren<ParticleSystem>().Play();
             }
         }
         else if(collision.gameObject.layer == 6)
