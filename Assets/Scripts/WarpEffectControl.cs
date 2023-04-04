@@ -11,7 +11,12 @@ public class WarpEffectControl : MonoBehaviour
 
     private void Awake()
     {
-        particleSys = GetComponent<ParticleSystem>();
+        particleSys = GetComponent<ParticleSystem>(); 
+    }
+
+    private void Start()
+    {
+        GameManager.instance.OnGameStateChange.AddListener(ChangeState);
     }
 
     private void Update()
