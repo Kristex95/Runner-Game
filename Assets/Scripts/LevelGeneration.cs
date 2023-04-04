@@ -7,17 +7,11 @@ public class LevelGeneration : MonoBehaviour
     //TODO: make player a singelton
 
     [SerializeField] private Transform player;
-    [SerializeField] private Transform levelPart;
+    [SerializeField] private Transform[] levelPart;
     [SerializeField] private Transform lastLevelPart;
-    private float levelPartLength;
+    private float levelPartLength = 30f;
 
     [SerializeField] private float spawnDistance = 100f;
-
-    private void Awake()
-    {
-        levelPartLength = levelPart.transform.localScale.z;
-        
-    }
 
     private void Update()
     {
@@ -29,7 +23,7 @@ public class LevelGeneration : MonoBehaviour
 
     private Transform SpawnLevel()
     {
-        Transform newLevelPart = Instantiate(levelPart, lastLevelPart.transform.position + new Vector3(0, 0, levelPartLength), Quaternion.identity);
+        Transform newLevelPart = Instantiate(levelPart[Random.Range(0, levelPart.Length)], lastLevelPart.transform.position + new Vector3(0, 0, levelPartLength), Quaternion.identity);
         newLevelPart.transform.parent = GameObject.Find("Level").transform;
         return newLevelPart;
     }
