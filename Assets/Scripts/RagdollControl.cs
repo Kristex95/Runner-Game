@@ -7,6 +7,7 @@ public class RagdollControl : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody[] rigidbodies;
     [SerializeField] private Collider[] colliders;
+    [SerializeField] private TrailRenderer trailRenderer;
 
     private void Awake()
     {
@@ -41,6 +42,9 @@ public class RagdollControl : MonoBehaviour
             GetComponent<Rigidbody>().isKinematic = true;
             MakePhysical();
             GetComponentInParent<PlayerMovement>().enabled = false;
+            trailRenderer.time = Mathf.Infinity;
+
+            GameManager.instance.SetGameState(GameState.GameOver);
         }
     }
 }
