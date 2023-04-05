@@ -36,7 +36,7 @@ public class RagdollControl : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == 6)
+        if (collision.gameObject.layer == 6 || collision.gameObject.layer == 8)
         {
             Destroy(GetComponent<CapsuleCollider>());
             GetComponent<Rigidbody>().isKinematic = true;
